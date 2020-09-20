@@ -125,10 +125,6 @@ public static void main(String[] args) {
 	
 	
 	
-	
-	
-	
-	
 	}
 
 
@@ -136,6 +132,9 @@ public static void main(String[] args) {
 		int select = 0;
 		int result = 0;
 		System.out.println("numero a " + numa + "// numero b " + numb);
+		
+		//System.out.println("ARRAY ---> " +  Arrays.toString(a));
+		
 		for (int i = 0; i < 3; i++) {
 			if (a[i] == numa || a[i] == numb) {
 				result ++;
@@ -149,6 +148,7 @@ public static void main(String[] args) {
 			for (int h = 0; h < 3; h++) {
 				if ((a[h] != numa) && (a[h] != numb)) {
 					select = a[h];
+				
 				}
 			}
 		}
@@ -158,9 +158,6 @@ public static void main(String[] args) {
 		return select;
 		
 	}
-	
-	
-	
 	
 	
 	
@@ -187,27 +184,48 @@ public static void main(String[] args) {
 	}
 	
 	
-	public static int secondaryMoves(int mova, int movb, int[][] raws){
-		int select = 0;
-		
-		for (int y = 0; y < raws.length; y ++) {
-			select = findsInArray(mova, movb, raws[y]);
-			if (select != 0) {
-				System.out.println("SELECT BOX " + select);
-				break;
+	
+	public static boolean excludesArray(int[] ar) {
+		boolean result = true;
+		int riv = 0;
+		int machine = 0;
+		for (int b = 0; b < 3; b++) {
+			if (Buttons[ar[b]].getText() == rival) {
+				riv ++ ;
+			}
+			else if (Buttons[ar[b]].getText() == choice) {
+				machine ++ ;
 			}
 		}
 		
-		return select;
-		
-
+		if (riv + machine == 3) {
+			result = false;
+			System.out.println("EXCLUDE ARRAY " + Arrays.toString(ar));
+		}
+		return result;
 		
 	}
 	
 	
 	
-
-	
+	public static int secondaryMoves(int mova, int movb, int[][] raws){
+		int select = 0;
+		//WORK HERE TO AVOID ANALIZING SAME ARRAY THAT HAS ALREADY BEEN ANALIZED
+		//UPDATED: NOT SURE IF IT WORKED. KEEP TRYING...
+		
+		System.out.println("Given digits a and b :" + mova + " and " + movb);
+		for (int y = 0; y < raws.length; y ++) {
+			if (excludesArray ( raws[y]) == true ) {
+				select = findsInArray(mova, movb, raws[y]);
+				if (select != 0) {
+					//System.out.println("SELECT BOX " + select);
+					break;
+				}
+			}
+		}
+		
+		return select;
+	}
 	
 	
 	public static int randomSteps() {
@@ -242,37 +260,8 @@ public static void main(String[] args) {
 		return boxToSelect;
 	}
 	
-	/*
-	public static String returnVertical(int c) {
-		String coord = null;
-		if(c - 3 == 3 & c + 3 >= 6){
-			 coord = "m";}
-		else if (c + 1 <= 4) {
-			coord = "t";
-		}
-		else if (c + 1 >= 7) {
-			coord = "l";
-		}
-		return coord;	
-	}
-		
 	
-	public static String returnHorizontal(int c) {
-		String coord = null;
-		if(c == 1 || c == 4 || c == 7){
-			coord = "m";
-		}
-		if(c == 0 || c == 3 || c == 9){
-			coord = "i";
-		}
-		if(c == 2 || c == 5 || c == 8){
-			coord = "i";
-		}
-		return coord;
-	}*/
-	
-	
-	
+
 	public static void machine(int player) {
 		int firstMove = initialMoves(player);
 		Buttons[firstMove].painter(rival);
@@ -281,10 +270,40 @@ public static void main(String[] args) {
 		}
 	}
 	
+	
+	public static int fitsInArray(Vector<Integer> clicked, int[][] rowx) {
+		
+		
+		//REVISAR TODA ESTA MOVIDA
+		int toSelect = 0;
+		
+		for (int l = 0; l < rowx.length; l ++) {
+		
+		for (int cl = 0; cl < clicked.size(); cl++) {
+			for (int mov = clicked.indexOf(cl) +1  ; mov < clicked.size(); mov ++) {
+				if (findsInArray(cl, mov, rowx[l]) != 0) {
+						toSelect = findsInArray(cl, mov, rowx[l]);
+						break;
+				}
+			}
+			if (toSelect != 0) {
+				break;
+			}
+		}
+		
+		}
+		return toSelect;
+	}
+	
+	
+	
+	
 	public static void machine2(int[][] r) {
-		Vector<Integer> v =  getTheDigits();
-		System.out.println("Combinations length " + r.length);
-		int second = secondaryMoves(v.get(0), v.get(1), r);
+		Vector <Integer> v =  getTheDigits();
+		System.out.println("BOTONES CLICKEADOS... " + v);
+		int second = secondaryMoves(v.get(v.size() - 2), v.get(v.size()-1), r);//EL PROBLEMA ESTA ACA. SIEMPE PASO 1RO Y 2DO CLICKEADOS
+		//int second = fitsInArray(v, r); //TOQUE ACA...
+		
 		Buttons[second].painter(rival);
 		if (Pos.contains(second) == false) {
 			Pos.add(second);
@@ -293,9 +312,11 @@ public static void main(String[] args) {
 	
 	
 	public static Vector<Integer> getTheDigits() {
-		if (Pos.size() == 3) {
-			for (int i = 0; i < 3 ; i++) {
-				if (Buttons[Pos.get(i)].getText() == choice) {
+		//Returns a vector filled with integers representing the buttons clicked by user
+		if (Pos.size() >= 3) { 
+			
+			for (int i = 0; i < Pos.size() ; i++) { // SE ARMO QUILOMBO ACA...
+				if (Buttons[Pos.get(i)].getText() == choice && Clicked.contains(Pos.get(i)) == false) {
 					Clicked.add(Pos.get(i));
 				}
 			}		
@@ -303,8 +324,6 @@ public static void main(String[] args) {
 		return Clicked;
 		
 	}
-
-		
 
 }
 
@@ -348,13 +367,14 @@ class Button extends JButton{
 				Button.this.repaint();
 				System.out.println(Button.this.getName());
 				int p = met.returnsPosition(Button.this);
-				System.out.println("Indice de boton clickeado : " + p);
 				if (met.Pos.size() == 1) {
 					met.machine(p);
 				}
-				else if (met.Pos.size() == 3) {
-					System.out.println("We are here...");
+				else if (met.Pos.size() >= 3 && met.Pos.size() < 9 ) {
+					
+					//SEEMS LIKE MAIN POBLEM COULD BE AROUND HERE
 					met.machine2(met.combinations);
+		
 				}
 				
 			}		
