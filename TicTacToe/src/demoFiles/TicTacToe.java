@@ -2,51 +2,35 @@ package demoFiles;
 
 
 import java.awt.Color;
-
 import java.awt.Font;
-
 import java.awt.event.ActionEvent;
-
 import java.awt.event.ActionListener;
-
 import java.util.Random;
-
 import java.util.Vector;
-
 import java.util.Arrays;
-
 import javax.swing.JButton;
-
 import javax.swing.JFrame;
-
 import javax.swing.JPanel;
 
 
 public class TicTacToe {
 
 public static String choice;
-
 public static String rival;
-
 public static Button [] Buttons;
 
 
 public static int[] horSup = new int[]{0,1,2};
-
 public static int[] horMid = new int[]{3,4,5};
-
 public static int[] horInf = new int[]{6,7,8};
 
 
 public static int[] verLeft = new int[]{0,3,6};
-
 public static int[] verMid = new int[]{1,4,7};
-
 public static int[] verRight = new int[]{2,5,8};
 
 
 public static int[] diagUpDown = new int[]{0,4,8};
-
 public static int[] diagDownUp = new int[]{6,4,2};
 
 
@@ -54,9 +38,7 @@ public static int[][] combinations = {horSup, horMid, horInf, verLeft, verMid, v
 
 
 public static Vector<Button> F = new Vector<Button>();
-
 public static Vector<Integer> Pos = new Vector<Integer>();
-
 public static Vector<Integer> Clicked = new Vector<Integer>();
 
 
@@ -98,209 +80,106 @@ public static void main(String[] args) {
 			Gpanel.add(MidSup);
 
 
-
 			Button RigSup = new Button(405,95,195, 195, choice);
-
 			RigSup.setName("RigSup");
-
 			Gpanel.add(RigSup);
 
 			
-
 			Button LeftMid = new Button(5,295,195, 195, choice);
-
 			LeftMid.setName("LeftMid");
-
 			Gpanel.add(LeftMid);
 
-			
 
 			Button MidMid = new Button(205,295,195, 195, choice);
-
 			MidMid.setName("MidMid");
-
 			Gpanel.add(MidMid);
 
 
-
 			Button RigMid = new Button(405,295,195, 195,choice);
-
 			RigMid.setName("RigMid");
-
 			Gpanel.add(RigMid);
 
 
-
 			Button LeftInf = new Button(5,495,195, 195,choice);
-
 			LeftInf.setName("LeftInf");
-
 			Gpanel.add(LeftInf);
 
 			
-
 			Button MidInf = new Button(205,495,195, 195,choice);
-
 			MidInf.setName("MidInf");
-
 			Gpanel.add(MidInf);
 
-			
 
 			Button RigInf = new Button(405,495,195, 195,choice);
-
 			RigInf.setName("RigInf");
-
 			Gpanel.add(RigInf);
 
 	
-
 			Gpanel.repaint();
 
-			
-
-			
-
+		
 			Buttons = new Button[9];
 
-			
 
 			Buttons[0] = LeftSup;
-
 			Buttons[1] = MidSup;
-
 			Buttons[2] = RigSup;
-
-			
-
 			Buttons[3] = LeftMid;
-
 			Buttons[4] = MidMid;
-
 			Buttons[5] = RigMid;
-
-			
-
 			Buttons[6] = LeftInf;
-
 			Buttons[7] = MidInf;
-
 			Buttons[8] = RigInf;
 
-						
-
 		}
-
 	};
 
 	
-
-
-
 	x.addActionListener(Listen);
-
 	y.addActionListener(Listen);
-
-	
-
-	
-
-	
-
-	}
-
-
+}
 
 
 	public static int completesArray(int numa, int numb, int[] a) {
-
 		int select = 0;
-
 		int result = 0;
-
 		System.out.println("numero a " + numa + "// numero b " + numb);
-
-		
-
-		//System.out.println("ARRAY ---> " +  Arrays.toString(a));
-
-		
-
 		for (int i = 0; i < 3; i++) {
-
 			if (a[i] == numa || a[i] == numb) {
-
 				result ++;
-
 				}
-
 			if(result == 2) {
-
 				System.out.println("FOUND IT ...");
-
 			}
-
-	
-
-			}
-
-		if (result == 2) {
-
-			for (int h = 0; h < 3; h++) {
-
-				if ((a[h] != numa) && (a[h] != numb)) {
-
-					select = a[h];
-
-				
-
-				}
-
-			}
-
 		}
 
-		
-
-		
+	
+		if (result == 2) {
+			for (int h = 0; h < 3; h++) {
+				if ((a[h] != numa) && (a[h] != numb)) {
+					select = a[h];
+				}
+			}
+		}
 
 		System.out.println("SELECT WILL BE " + select);
 
 		return select;
-
-		
-
 	}
 
 	
-
 	
-
-	
-
 	public static int returnsPosition(Button b) {
 
 		//System.out.println("Given button:  " + b.getName());
-
 		int position = 0;
-
 		for (int n = 0; n < 9 ; n++) {
-
 			Buttons[n].repaint();
-
-			
-
 			if (Buttons[n] == b) {
-
 				position = n;
-
 				if (Pos.contains(position) == false) {
-
 					Pos.add(position);
-
 				}
-
-			
 
 				for( int larg = 0; larg < Pos.size() ; larg++  ) {
 
@@ -321,183 +200,162 @@ public static void main(String[] args) {
 	}
 
 	
-
-	
-
-	
-
 	public static boolean excludesArray(int[] ar) {
-
+		/*Receives an integer array and checks if its 3 positions are ocuppied or not.
+		if they are the method returns false. If not it returns true, and that means
+		that there is a line on the board that is about to be completed*/
 		boolean result = true;
-
-		int riv = 0;
-
 		int machine = 0;
-
+		int player = 0;
+		
 		for (int b = 0; b < 3; b++) {
-
 			if (Buttons[ar[b]].getText() == rival) {
-
-				riv ++ ;
-
-			}
-
-			else if (Buttons[ar[b]].getText() == choice) {
-
 				machine ++ ;
-
 			}
-
+			else if (Buttons[ar[b]].getText() == choice) {
+				player ++ ;
+			}
 		}
 
-		
-
-		if (riv + machine == 3) {
-
+		if (machine + player == 3) {
 			result = false;
-
 			System.out.println("EXCLUDE ARRAY " + Arrays.toString(ar));
-
 		}
 
 		return result;
-
-		
-
 	}
-
+	
+	
+	public static int [] returnsExcludedArray(int[][]arr) {
+		/*Searches through an array of arrays and returns the one that
+		should be exclude of analisis after (the one that is fully ocuppied)*/
+		int[] exc = null;
+		for (int a = 0; a < arr.length; a ++) {
+			if (excludesArray(arr[a]) == false) {
+				exc = arr[a];
+				break;
+			}
+		}
+		return exc;
+	}
+	
+	
 	
 
 	
-
+	public static int findsMachineBox(int[]raw){
+		/*Receives an array with integers representing positions on the board.
+		It finds and returns the position of the button 'clicked' by the machine*/
+		int box = 0;
+		for(int pos = 0; pos < 3; pos++) {
+			if (Buttons[raw[pos]].getText() == rival) {
+				box = raw[pos];
+				break;
+			}
+		}
+		return box;
+	}
+	
+	
+	public static int alternativeBox(int[][]raws, int[]excluded){
+		/*Receives an array of arrays, and an array to exclude of the previous one. It checks one by one
+		except for the excluded, searching for a common number between it an another one. Then in this
+		other array that will contain this common number, chooses a free box next to it and returns it*/
+		int common = findsMachineBox(excluded); //this is the number i need to find in a different array
+		int toMark = 20;
+		
+		
+		for (int r = 0; r < raws.length; r++) {
+			if (raws[r] != excluded) {
+				if (contains(common, raws[r]) == true) {
+					for (int number = 0; number < 3; number++) {
+						if (raws[r][number] != common) {
+							if(Buttons[raws[r][number]].getText().length() == 0) {
+								toMark = raws[r][number];
+								break;
+							}
+						}
+					}
+					if(toMark != 20) {
+						break;
+					}
+				}
+			}
+		}
+		return toMark;
+	}
 	
 
 	public static int secondaryMoves(Vector<Integer> pressed, int[][] raws){
 
 		int select = 0;
 
-		//WORK HERE TO AVOID ANALIZING SAME ARRAY THAT HAS ALREADY BEEN ANALIZED
-
-		//UPDATED: NOT SURE IF IT WORKED. KEEP TRYING...
-
-		
-
-		//System.out.println("Given digits a and b :" + mova + " and " + movb);
-
 		for (int y = 0; y < raws.length; y ++) {
-
 			if (excludesArray ( raws[y]) == true ) {
-
 				select = findsArrayForPositions(pressed, raws[y]);
-
 				if (select != 0) {
-
-					//System.out.println("SELECT BOX " + select);
-
 					break;
-
 				}
-
 			}
-
 		}
 
-		
-
 		return select;
-
 	}
 
 	
-
-	
-
 	public static int randomSteps() {
 
 		int square = 0;
-
 		Random r = new Random();
-
 		int randomized = r.nextInt(3);
 
 		if (randomized == 0) {
-
 			square = 0;
-
 		}
 
 		else if (randomized == 1){
-
 			square = 2;
-
 		}
 
 		else if (randomized == 2){
-
 			square = 6;
-
 		}
 
 		else if (randomized == 3){
-
 			square = 8;
-
 		}
 
 		return square;
-
 	}
 
 	
-
-	
-
-	
-
 	public static int initialMoves(int move){
 
 		int boxToSelect = 0;
 
 		if (move == 4) {
-
 			boxToSelect = randomSteps();
-
 		}
 
 		if (move != 4){
-
 			boxToSelect = 4;
-
 		}
 
 		return boxToSelect;
-
 	}
 
 	
-
-	
-
-
-
 	public static void machine(int player) {
 
 		int firstMove = initialMoves(player);
-
 		Buttons[firstMove].painter(rival);
 
 		if (Pos.contains(firstMove) == false) {
-
 			Pos.add(firstMove);
-
 		}
-
 	}
 
 	
-
-
-
 	public static boolean contains(int value, int[] container) {
 
 		boolean answer = false;
@@ -523,43 +381,25 @@ public static void main(String[] args) {
 	public static int findsArrayForPositions(Vector<Integer> pressed, int[] lines) {
 
 		/* Receives a vector with clicked buttons (only human player), and an array with
-
 		3 integers representing a row in the board. It iterates through the values of "pressed"
-
 		finding couples that matches at least 2 values inside the "lines" array. Then it returns
-
 		the missing number inside of it to complete it*/
 
 		int complete = 0;
 
-		
-
 		for (int pr = 0; pr < pressed.size(); pr ++){
-
 			for (int p = pr + 1; p < pressed.size(); p ++) {
-
 				if (contains(pressed.get(pr), lines) == true && contains(pressed.get(p), lines) ) {
-
 					complete = completesArray(pressed.get(pr),pressed.get(p),lines);
-
 					break;
-
 				}
-
 			}
-
 			if(complete != 0) {
-
 				break;
-
 			}
-
 		}
 
-		
-
 		return complete;
-
 	}
 
 	
@@ -574,11 +414,16 @@ public static void main(String[] args) {
 		int second = secondaryMoves(v, r);//EL PROBLEMA ESTA ACA. SIEMPE PASO 1RO Y 2DO CLICKEADOS
 
 		//int second = fitsInArray(v, r); //TOQUE ACA...
+		
+		if (Pos.size() >= 3 && second == 0) {
+			
+			int [] e = returnsExcludedArray(r);
+			
+			second = alternativeBox(r, e);
+			
+		}
 
 		
-
-		
-
 		if (Pos.contains(second) == false) {
 			Buttons[second].painter(rival);
 			Pos.add(second);
