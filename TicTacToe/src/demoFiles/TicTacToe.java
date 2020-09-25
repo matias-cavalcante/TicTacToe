@@ -120,7 +120,6 @@ public static void main(String[] args) {
 		
 			Buttons = new Button[9];
 
-
 			Buttons[0] = LeftSup;
 			Buttons[1] = MidSup;
 			Buttons[2] = RigSup;
@@ -130,7 +129,6 @@ public static void main(String[] args) {
 			Buttons[6] = LeftInf;
 			Buttons[7] = MidInf;
 			Buttons[8] = RigInf;
-
 		}
 	};
 
@@ -153,7 +151,6 @@ public static void main(String[] args) {
 			}
 		}
 
-	
 		if (result == 2) {
 			for (int h = 0; h < 3; h++) {
 				if ((a[h] != numa) && (a[h] != numb)) {
@@ -161,17 +158,13 @@ public static void main(String[] args) {
 				}
 			}
 		}
-
 		System.out.println("SELECT WILL BE " + select);
-
 		return select;
 	}
 
 	
 	
 	public static int returnsPosition(Button b) {
-
-		//System.out.println("Given button:  " + b.getName());
 		int position = 0;
 		for (int n = 0; n < 9 ; n++) {
 			Buttons[n].repaint();
@@ -182,21 +175,12 @@ public static void main(String[] args) {
 				}
 
 				for( int larg = 0; larg < Pos.size() ; larg++  ) {
-
 					System.out.println("Botones ocupados -> " + Pos.elementAt(larg)+ " /Status: " + Buttons[Pos.elementAt(larg)].getText());
-
 				}
-
 				break;
-
 			}
-
 		}
-
-		
-
 		return position;
-
 	}
 
 	
@@ -228,7 +212,7 @@ public static void main(String[] args) {
 	
 	public static int [] returnsExcludedArray(int[][]arr) {
 		/*Searches through an array of arrays and returns the one that
-		should be exclude of analisis after (the one that is fully ocuppied)*/
+		should be exclude of analysis after (the one that is fully occupied)*/
 		int[] exc = null;
 		for (int a = 0; a < arr.length; a ++) {
 			if (excludesArray(arr[a]) == false) {
@@ -239,9 +223,6 @@ public static void main(String[] args) {
 		return exc;
 	}
 	
-	
-	
-
 	
 	public static int findsMachineBox(int[]raw){
 		/*Receives an array with integers representing positions on the board.
@@ -287,12 +268,13 @@ public static void main(String[] args) {
 	
 
 	public static int secondaryMoves(Vector<Integer> pressed, int[][] raws){
-
 		int select = 0;
-
 		for (int y = 0; y < raws.length; y ++) {
-			if (excludesArray ( raws[y]) == true ) {
+			if (excludesArray (raws[y]) == true ) {
 				select = findsArrayForPositions(pressed, raws[y]);
+				if (select == 0 && Pos.size() >= 6) {
+					select = findsArrayForPositions(getTheDigits(rival), raws[y]);
+				}
 				if (select != 0) {
 					break;
 				}
@@ -304,7 +286,6 @@ public static void main(String[] args) {
 
 	
 	public static int randomSteps() {
-
 		int square = 0;
 		Random r = new Random();
 		int randomized = r.nextInt(3);
@@ -312,25 +293,20 @@ public static void main(String[] args) {
 		if (randomized == 0) {
 			square = 0;
 		}
-
 		else if (randomized == 1){
 			square = 2;
 		}
-
 		else if (randomized == 2){
 			square = 6;
 		}
-
 		else if (randomized == 3){
 			square = 8;
 		}
-
 		return square;
 	}
 
 	
 	public static int initialMoves(int move){
-
 		int boxToSelect = 0;
 
 		if (move == 4) {
@@ -346,7 +322,6 @@ public static void main(String[] args) {
 
 	
 	public static void machine(int player) {
-
 		int firstMove = initialMoves(player);
 		Buttons[firstMove].painter(rival);
 
@@ -357,29 +332,20 @@ public static void main(String[] args) {
 
 	
 	public static boolean contains(int value, int[] container) {
-
 		boolean answer = false;
-
 		for (int numbers = 0; numbers < container.length; numbers ++) {
-
 			if(container[numbers] == value) {
-
 				answer = true;
-
 				break;
-
 			}
-
 		}
 
 		return answer;
-
 	}
 
 	
 
 	public static int findsArrayForPositions(Vector<Integer> pressed, int[] lines) {
-
 		/* Receives a vector with clicked buttons (only human player), and an array with
 		3 integers representing a row in the board. It iterates through the values of "pressed"
 		finding couples that matches at least 2 values inside the "lines" array. Then it returns
@@ -402,220 +368,115 @@ public static void main(String[] args) {
 		return complete;
 	}
 
-	
 
 
 	public static void machine2(int[][] r) {
-
-		Vector <Integer> v =  getTheDigits();
-
+		Vector <Integer> v =  getTheDigits(choice);
 		System.out.println("BOTONES CLICKEADOS... " + v);
-
-		int second = secondaryMoves(v, r);//EL PROBLEMA ESTA ACA. SIEMPE PASO 1RO Y 2DO CLICKEADOS
-
-		//int second = fitsInArray(v, r); //TOQUE ACA...
+		int second = secondaryMoves(v, r);
 		
-		if (Pos.size() >= 3 && second == 0) {
-			
+		
+		if (Pos.size() >= 3 && second == 0) {			
 			int [] e = returnsExcludedArray(r);
-			
 			second = alternativeBox(r, e);
-			
 		}
 
-		
 		if (Pos.contains(second) == false) {
 			Buttons[second].painter(rival);
 			Pos.add(second);
-
 		}
-
 	}
 
 	
-
-	
-
-	public static Vector<Integer> getTheDigits() {
-
-		//Returns a vector filled with integers representing the buttons clicked by user
-
+	public static Vector<Integer> getTheDigits(String player) {
+		/*Returns a vector filled with integers representing the buttons clicked by user
+		or machine according to what is given in the parameters*/
 		if (Pos.size() >= 3) { 
-
-			
-
 			for (int i = 0; i < Pos.size() ; i++) { // SE ARMO QUILOMBO ACA...
-
-				if (Buttons[Pos.get(i)].getText() == choice && Clicked.contains(Pos.get(i)) == false) {
-
+				if (Buttons[Pos.get(i)].getText() == player && Clicked.contains(Pos.get(i)) == false) {
 					Clicked.add(Pos.get(i));
-
 				}
-
 			}		
-
 		}
-
 		return Clicked;
-
-		
-
 	}
-
-
-
 }
-
-
-
 
 
 //FRAME AND PANEL CLASSES
 
 
-
 class Frame extends JFrame{
-
 	public Frame() {
-
 		setBounds(325, 100, 620, 735);
-
 		setVisible(true);
-
 	}
-
 }
-
-
-
 
 
 class Panel extends JPanel{
-
 	public Panel() {
-
 		setBounds(0, 0, 620, 735);
-
 		setBackground(new Color(63,115,102));
-
 		setVisible(true);
-
 		setLayout(null);
-
 	}
-
 }
-
-
-
 
 
 //BOTONES (INICIALMENTE SOLO RECIBIRAN MEDIDAS)
 
-	
 
 class Button extends JButton{
-
 	TicTacToe met = new TicTacToe();
-
 	public String draw;
-
 	public Button(int x, int y, int w, int h, String ch){
-
 		setBounds(x, y, w, h);
-
 		setBackground(new Color(77,176,160));
-
 		setVisible(true);
-
-		
-
-
-
 		addActionListener(new ActionListener() {
 
 			@Override
-
 			public void actionPerformed(ActionEvent arg0) {
-
 				setFont(new Font("Verdana",20,90));
-
 				setText(ch);
-
 				Button.this.repaint();
-
 				System.out.println(Button.this.getName());
-
 				int p = met.returnsPosition(Button.this);
-
 				if (met.Pos.size() == 1) {
-
 					met.machine(p);
-
 				}
 
 				else if (met.Pos.size() >= 3 && met.Pos.size() < 9 ) {
-
-					
-
-					//SEEMS LIKE MAIN POBLEM COULD BE AROUND HERE
-
 					met.machine2(met.combinations);
-
-		
-
 				}
-
-				
-
 			}		
-
 		});	
-
 	}
 
 	
-
-	
-
 	public void painter(String m) {
-
 		setFont(new Font("Verdana",20,90));
-
 		setText(m);
-
 		repaint();
-
 	}
 
 	
-
 	public String drawed () {
-
 		return this.getText();
-
 	}
-
-	
 
 }
-
 
 
 //BOTONES ELECCION FIGURA
 
 
-
 class ChoiceButton extends JButton{
-
 	public ChoiceButton(String b, int x, int y){
-
 		setBounds(x, y, 70, 40);
-
 		setText(b);
-
 		setBackground(new Color(77,176,160));
-
 		setVisible(true);
 	}
-	}
+}
