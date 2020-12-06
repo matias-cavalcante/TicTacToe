@@ -185,7 +185,7 @@ public static void main(String[] args) {
 
 	
 	public static boolean excludesArray(int[] ar) {
-		/*Receives an integer array and checks if its 3 positions are ocuppied or not.
+		/*Receives an integer array and checks if its 3 positions are occupied or not.
 		if they are the method returns false. If not it returns true, and that means
 		that there is a line on the board that is about to be completed*/
 		boolean result = true;
@@ -228,8 +228,10 @@ public static void main(String[] args) {
 		/*Receives an array with integers representing positions on the board.
 		It finds and returns the position of the button 'clicked' by the machine*/
 		int box = 0;
-		for(int pos = 0; pos < 3; pos++) {
+		for(int pos = 0; pos < raw.length; pos++) {
+			System.out.println("CRUSHES WITH? " + Arrays.toString(raw));
 			if (Buttons[raw[pos]].getText() == rival) {
+			
 				box = raw[pos];
 				break;
 			}
@@ -243,7 +245,7 @@ public static void main(String[] args) {
 		except for the excluded, searching for a common number between it an another one. Then in this
 		other array that will contain this common number, chooses a free box next to it and returns it*/
 		int common = findsMachineBox(excluded); //this is the number i need to find in a different array
-		int toMark = 20;
+		int toMark = 20;//?
 		
 		
 		for (int r = 0; r < raws.length; r++) {
@@ -268,12 +270,14 @@ public static void main(String[] args) {
 	
 
 	public static int secondaryMoves(Vector<Integer> pressed, int[][] raws){
-		int select = 0;
+		int select = 0; //Esto me esta trayendo muchos quilombos (12/10);
 		for (int y = 0; y < raws.length; y ++) {
 			if (excludesArray (raws[y]) == true ) {
-				select = findsArrayForPositions(pressed, raws[y]);
-				if (select == 0 && Pos.size() >= 6) {
-					select = findsArrayForPositions(getTheDigits(rival), raws[y]);
+				select = findsArrayForPositions(getTheDigits(rival), raws[y]);
+				//select = findsArrayForPositions(pressed, raws[y]);
+				if (select == 0 && Pos.size() >= 3) { //SEEMS LIKE IT WORKED...
+					/*select = findsArrayForPositions(getTheDigits(rival), raws[y]);*/
+					select = findsArrayForPositions(pressed, raws[y]);
 				}
 				if (select != 0) {
 					break;
@@ -351,9 +355,11 @@ public static void main(String[] args) {
 		finding couples that matches at least 2 values inside the "lines" array. Then it returns
 		the missing number inside of it to complete it*/
 
+		System.out.println("In this case pressed is: " + pressed +  "   "+ Arrays.toString(lines));
 		int complete = 0;
 
 		for (int pr = 0; pr < pressed.size(); pr ++){
+			System.out.println("Lines are :" + Arrays.toString(lines));
 			for (int p = pr + 1; p < pressed.size(); p ++) {
 				if (contains(pressed.get(pr), lines) == true && contains(pressed.get(p), lines) ) {
 					complete = completesArray(pressed.get(pr),pressed.get(p),lines);
@@ -364,7 +370,8 @@ public static void main(String[] args) {
 				break;
 			}
 		}
-
+		
+		//System.out.println("Complete will be: " + complete);
 		return complete;
 	}
 
@@ -372,21 +379,31 @@ public static void main(String[] args) {
 
 	public static void machine2(int[][] r) {
 		Vector <Integer> v =  getTheDigits(choice);
-		System.out.println("BOTONES CLICKEADOS... " + v);
+		//System.out.println("BOTONES CLICKEADOS... " + v);
 		int second = secondaryMoves(v, r);
 		
 		
-		if (Pos.size() >= 3 && second == 0) {			
+		if (Pos.size() >= 3 && second == 22) {			
 			int [] e = returnsExcludedArray(r);
 			second = alternativeBox(r, e);
 		}
-
 		if (Pos.contains(second) == false) {
 			Buttons[second].painter(rival);
 			Pos.add(second);
 		}
 	}
 
+	
+	public static boolean validatesGetDigits(Vector <Integer> dig) {
+		boolean result = false;
+		if (dig.size() >= 2) {
+			result = true;
+		}
+		return result;
+	}
+	
+	
+	
 	
 	public static Vector<Integer> getTheDigits(String player) {
 		/*Returns a vector filled with integers representing the buttons clicked by user
